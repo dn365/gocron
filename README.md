@@ -42,6 +42,10 @@ func main() {
 	gocron.Every(1).Day().Do(task)
 	gocron.Every(2).Days().Do(task)
 
+	// set Job name
+
+	gocron.Every(2).Days().JobName("test-task").Do(task)
+
 	// Do jobs on specific weekday
 	gocron.Every(1).Monday().Do(task)
 	gocron.Every(1).Thursday().Do(task)
@@ -55,6 +59,9 @@ func main() {
 	fmt.Println(time)
 
 	gocron.Remove(task)
+	// remove task by name
+	gocron.RemoveByName("test-task")
+	
 	gocron.Clear()
 
 	// function Start start all the pending jobs

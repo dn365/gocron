@@ -483,7 +483,7 @@ func (s *Scheduler) Remove(j interface{}) {
 	s.size = s.size - 1
 }
 
-func (s *Scheduler) RemoveToName(name string) {
+func (s *Scheduler) RemoveByName(name string) {
 	// j interface{}
 	// s.jobs
 	// fmt.Println(s.Len())
