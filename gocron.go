@@ -40,7 +40,8 @@ func ChangeLoc(newLocation *time.Location) {
 const MAXJOBNUM = 10000
 
 type Job struct {
-
+	// job name
+	name string
 	// pause interval * unit bettween runs
 	interval uint64
 
@@ -71,6 +72,7 @@ type Job struct {
 // Create a new job with the time interval.
 func NewJob(intervel uint64) *Job {
 	return &Job{
+		"",
 		intervel,
 		"", "", "",
 		time.Unix(0, 0),
@@ -84,6 +86,11 @@ func NewJob(intervel uint64) *Job {
 // True if the job should be run now
 func (j *Job) shouldRun() bool {
 	return time.Now().After(j.nextRun)
+}
+
+func (j *Job) JobName(n string) *Job {
+	j.name = n
+	return j
 }
 
 //Run the job and immediately reschedule it
@@ -109,6 +116,9 @@ func getFunctionName(fn interface{}) string {
 	return runtime.FuncForPC(reflect.ValueOf((fn)).Pointer()).Name()
 }
 
+// func getJobToName(n string)  {
+//
+// }
 // Specifies the jobFunc that should be called every time the job runs
 //
 func (j *Job) Do(jobFun interface{}, params ...interface{}) {
@@ -378,6 +388,11 @@ func (s *Scheduler) Len() int {
 	return s.size
 }
 
+// func (s *Scheduler) JobName(name string) {
+// 	// return s.name
+// 	s.jobs
+// }
+
 func (s *Scheduler) Swap(i, j int) {
 	s.jobs[i], s.jobs[j] = s.jobs[j], s.jobs[i]
 }
@@ -466,6 +481,24 @@ func (s *Scheduler) Remove(j interface{}) {
 		i++
 	}
 	s.size = s.size - 1
+}
+
+func (s *Scheduler) RemoveToName(name string) {
+	// j interface{}
+	// s.jobs
+	// fmt.Println(s.Len())
+	i := 0
+	for ; i < s.Len(); i++ {
+		if s.jobs[i].name == name {
+			// append(s.jobs[:])
+			for j := (i + 1); j < s.size; j++ {
+				s.jobs[i] = s.jobs[j]
+				i++
+			}
+			s.size = s.size - 1
+			break
+		}
+	}
 }
 
 // Delete all scheduled jobs
